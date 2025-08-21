@@ -4,12 +4,10 @@
 ![JDK](https://img.shields.io/badge/JDK-17-green.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.x-brightgreen.svg)
 
-为[多功能可协同云相册前端](https://github.com/Liner03/cloudpic_frontend)提供后端服务。
 
 ## 📖 项目简介
 
 多功能可协同云相册是一个创新的图片管理与分享平台，具有以下特色功能：
-
 - **多空间管理**：支持公共空间、私人空间和协作工作空间
 - **协同创作**：邀请他人共同管理相册内容
 - **AI增强**：内置AI图像处理功能，支持图像扩展等操作
@@ -54,11 +52,4 @@
 - 图片上传、下载、分享
 - 图片分类、标签管理
 - AI图像处理（扩图、优化等）
-- 批量图片导入导出
-
-### 智能采集
-- 关键词采集网络图片（仅管理员）
-
-
-## 🔗 相关链接
-- [前端项目仓库](https://github.com/Liner03/cloudpic_frontend)
+- 关键词批量采集网络图片（仅管理员）

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pbx.cloudpicbackend.mapper.PictureMapper">
+
+    <resultMap id="BaseResultMap" type="com.pbx.cloudpicbackend.model.entity.Picture">
+        <id property="id" column="id" />
+        <result property="url" column="url" />
+        <result property="name" column="name" />
+        <result property="introduction" column="introduction" />
+        <result property="category" column="category" />
+        <result property="picSize" column="picSize" />
+        <result property="picWidth" column="picWidth" />
+        <result property="picHeight" column="picHeight" />
+        <result property="picScale" column="picScale" />
+        <result property="picFormat" column="picFormat" />
+        <result property="userId" column="userId" />
+        <result property="createTime" column="createTime" />
+        <result property="editTime" column="editTime" />
+        <result property="updateTime" column="updateTime" />
+        <result property="isDelete" column="isDelete" />
+        <result property="reviewStatus" column="reviewStatus" />
+        <result property="reviewMessage" column="reviewMessage" />
+        <result property="reviewerId" column="reviewerId" />
+        <result property="reviewTime" column="reviewTime" />
+        <result property="thumbnailUrl" column="thumbnailUrl" />
+        <result property="spaceId" column="spaceId" />
+        <result property="picColor" column="picColor" />
+    </resultMap>
+
+    <resultMap id="FullResultMap" type="com.pbx.cloudpicbackend.model.entity.Picture">
+        <id property="id" column="id" />
+        <result property="url" column="url" />
+        <result property="name" column="name" />
+        <result property="introduction" column="introduction" />
+        <result property="category" column="category" />
+        <result property="picSize" column="picSize" />
+        <result property="picWidth" column="picWidth" />
+        <result property="picHeight" column="picHeight" />
+        <result property="picScale" column="picScale" />
+        <result property="picFormat" column="picFormat" />
+        <result property="userId" column="userId" />
+        <result property="createTime" column="createTime" />
+        <result property="editTime" column="editTime" />
+        <result property="updateTime" column="updateTime" />
+        <result property="isDelete" column="isDelete" />
+        <result property="reviewStatus" column="reviewStatus" />
+        <result property="reviewMessage" column="reviewMessage" />
+        <result property="reviewerId" column="reviewerId" />
+        <result property="reviewTime" column="reviewTime" />
+        <result property="thumbnailUrl" column="thumbnailUrl" />
+        <result property="spaceId" column="spaceId" />
+        <result property="picColor" column="picColor" />
+        <association property="categoryInfo" javaType="com.pbx.cloudpicbackend.model.entity.Category" notNullColumn="c_id">
+            <id property="id" column="c_id" />
+            <result property="name" column="c_name" />
+            <result property="description" column="c_description" />
+            <result property="createTime" column="c_createTime" />
+            <result property="updateTime" column="c_updateTime" />
+            <result property="isDelete" column="c_isDelete" />
+        </association>
+        <collection property="tagInfo" ofType="com.pbx.cloudpicbackend.model.entity.Tag" notNullColumn="t_id">
+            <id property="id" column="t_id" />
+            <result property="name" column="t_name" />
+            <result property="description" column="t_description" />
+            <result property="usageCount" column="t_usageCount" />
+            <result property="type" column="t_type" />
+            <result property="createTime" column="t_createTime" />
+            <result property="updateTime" column="t_updateTime" />
+            <result property="isDelete" column="t_isDelete" />
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,url,name,introduction,category,picSize,
+        picWidth,picHeight,picScale,picFormat,userId,
+        createTime,editTime,updateTime,isDelete,reviewStatus,
+        reviewMessage,reviewerId,reviewTime,thumbnailUrl,spaceId,
+        picColor
+    </sql>
+
+    <select id="getFullById" parameterType="long" resultMap="FullResultMap">
+        SELECT
+        p.*,
+        c.id as c_id, c.name as c_name, c.description as c_description,
+        c.createTime as c_createTime, c.updateTime as c_updateTime, c.isDelete as c_isDelete,
+        t.id as t_id, t.name as t_name, t.description as t_description,
+        t.type as t_type, t.usageCount as t_usage_count,
+        t.createTime as t_createTime, t.updateTime as t_updateTime, t.isDelete as t_isDelete
+        FROM
+        picture p
+        LEFT JOIN
+        category c ON p.category = c.id AND c.isDelete = 0
+        LEFT JOIN
+        picture_tag pt ON p.id = pt.pictureId
+        LEFT JOIN
+        tag t ON pt.tagId = t.id AND t.isDelete = 0
+        WHERE
+        p.id = #{id}
+        AND p.isDelete = 0
+    </select>
+    <select id="selectFullPage" resultMap="FullResultMap">
+        SELECT
+            p.*,
+            c.id as c_id, c.name as c_name, c.description as c_description,
+            t.id as t_id, t.name as t_name, t.description as t_description,
+            t.type as t_type, t.usageCount as t_usageCount
+        FROM
+            picture p
+                LEFT JOIN
+            category c ON p.category = c.id AND c.isDelete = 0
+                LEFT JOIN
+            picture_tag pt ON p.id = pt.pictureId
+                LEFT JOIN
+            tag t ON pt.tagId = t.id AND t.isDelete = 0
+            ${ew.customSqlSegment}
+    </select>
+
+    <select id="selectPageByQueryWrapper" resultMap="FullResultMap">
+        SELECT p.* FROM picture p
+                            LEFT JOIN category c ON p.category = c.id AND c.isDelete = 0
+                            LEFT JOIN picture_tag pt ON p.id = pt.pictureId
+                            LEFT JOIN tag t ON pt.tagId = t.id AND t.isDelete = 0
+            ${ew.customSqlSegment}
+    </select>
+
+</mapper>

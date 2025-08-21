@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pbx.cloudpicbackend.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.pbx.cloudpicbackend.model.entity.User">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userAccount" column="userAccount" jdbcType="VARCHAR"/>
+            <result property="userPassword" column="userPassword" jdbcType="VARCHAR"/>
+            <result property="userName" column="userName" jdbcType="VARCHAR"/>
+            <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
+            <result property="userProfile" column="userProfile" jdbcType="VARCHAR"/>
+            <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
+            <result property="editTime" column="editTime" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+            <result property="vipExpireTime" column="vipExpireTime" jdbcType="TIMESTAMP"/>
+            <result property="vipCode" column="vipCode" jdbcType="VARCHAR"/>
+            <result property="vipNumber" column="vipNumber" jdbcType="BIGINT"/>
+        <collection property="avatar" ofType="com.pbx.cloudpicbackend.model.entity.UserAvatar">
+            <id property="id" column="avatar_id" />
+            <result property="avatarUrl" column="avatar_url" />
+            <result property="thumbnailUrl" column="thumbnail_url" />
+            <result property="userId" column="avatar_user_id" />
+            <result property="isActive" column="is_active" />
+            <result property="isDelete" column="avatar_is_delete" />
+            <result property="createTime" column="avatar_create_time" />
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userAccount,userPassword,
+        userName,userAvatar,userProfile,
+        userRole,editTime,createTime,
+        updateTime,isDelete,vipExpireTime,
+        vipCode,vipNumber
+    </sql>
+
+    <select id="getFullById" resultMap="BaseResultMap">
+        select
+            user.*,
+            u.id as avatar_id,
+            u.avatarUrl as avatar_url,
+            u.thumbnailUrl as thumbnail_url,
+            u.userId as avatar_user_id,
+            u.isActive as is_active,
+            u.isDelete as avatar_is_delete,
+            u.createTime as avatar_create_time
+        from user
+                 left join user_avatar u on user.id = u.userId and u.isDelete = 0
+        where user.id = #{userId}
+    </select>
+
+    <select id="selectFullPage" resultMap="BaseResultMap">
+        select user.*,
+               u.id as avatar_id,
+               u.avatarUrl as avatar_url,
+               u.thumbnailUrl as thumbnail_url,
+               u.userId as avatar_user_id,
+               u.isActive as is_active,
+               u.isDelete as avatar_is_delete,
+               u.createTime as avatar_create_time
+        from
+            user
+             left join
+                user_avatar u on user.id = u.userId and u.isActive = 1
+            ${ew.customSqlSegment}
+    </select>
+</mapper>
